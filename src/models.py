@@ -7,23 +7,56 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
+    last_name = Column(String(250), nullable=False)
+    correo = Column(String(50), nullable=False)
+    contrasena = Column(String(50), nullable=False)
+    fecha_registro = Column(String(50), nullable=False)
+    
+    favorite_planet = relationship("Favorite_Planet", back_populates="user")
+    favorite_character = relationship("Favorite_Character", back_populates="user")
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+
+class Planet(Base):
+    __tablename__ = 'planet'
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    name = Column(String(50), nullable=False)
+    poblacion = Column(String(50), nullable=False)
+
+   
+
+
+class Character(Base):
+    __tablename__ = 'character'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
+    genero = Column(String(50), nullable=False)
+    altura = Column(String(40), nullable=False)
+    peso = Column(String(40), nullable=False)
+
+
+
+class Favorite_Planet(Base):
+    __tablename__ = 'favorite_planet'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    planet_id = Column(Integer, ForeignKey('planet.id'))
+    
+    user = relationship(User, back_populates="favorite_planet")
+    
+
+class Favorite_Character(Base):
+    __tablename__ = 'favorite_character'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    character_id = Column(Integer, ForeignKey('character.id'))
+    user = relationship(User, back_populates="favorite_character")    
+       
+
+
 
     def to_dict(self):
         return {}

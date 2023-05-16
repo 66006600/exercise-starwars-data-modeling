@@ -7,6 +7,7 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
+
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
@@ -15,9 +16,10 @@ class User(Base):
     correo = Column(String(50), nullable=False)
     contrasena = Column(String(50), nullable=False)
     fecha_registro = Column(String(50), nullable=False)
-    
+
     favorite_planet = relationship("Favorite_Planet", back_populates="user")
-    favorite_character = relationship("Favorite_Character", back_populates="user")
+    favorite_character = relationship(
+        "Favorite_Character", back_populates="user")
 
 
 class Planet(Base):
@@ -25,8 +27,6 @@ class Planet(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     poblacion = Column(String(50), nullable=False)
-
-   
 
 
 class Character(Base):
@@ -38,29 +38,26 @@ class Character(Base):
     peso = Column(String(40), nullable=False)
 
 
-
 class Favorite_Planet(Base):
     __tablename__ = 'favorite_planet'
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    planet_id = Column(Integer, ForeignKey('planet.id'))
-    
-    user = relationship(User, back_populates="favorite_planet")
-    
+    user_id = Column(Integer, ForeignKey('user.id'), primary_key = True)
+    planet_id = Column(Integer, ForeignKey('planet.id'), primary_key = True)
 
+    user = relationship(User, back_populates="favorite_planet")
+
+   
 class Favorite_Character(Base):
     __tablename__ = 'favorite_character'
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    character_id = Column(Integer, ForeignKey('character.id'))
-    user = relationship(User, back_populates="favorite_character")    
-    
-       
- # __table_args__ = (CheckConstraint(id <= 5, name='check_max_planets'),
+    user_id = Column(Integer, ForeignKey('user.id'), primary_key = True)
+    character_id = Column(Integer, ForeignKey('character.id'), primary_key = True)
+    user = relationship(User, back_populates="favorite_character")
 
 
-    def to_dict(self):
-        return {}
+def to_dict(self):
+    return {}
 
-## Draw from SQLAlchemy base
+
+# Draw from SQLAlchemy base
 render_er(Base, 'diagram.png')

@@ -54,8 +54,9 @@ class Favorite_Character(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     character_id = Column(Integer, ForeignKey('character.id'))
     user = relationship(User, back_populates="favorite_character")    
+    
        
-
+ # __table_args__ = (CheckConstraint(id <= 5, name='check_max_planets'),
 
 
     def to_dict(self):
